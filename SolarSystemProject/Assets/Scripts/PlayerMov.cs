@@ -16,6 +16,8 @@ public class PlayerMov : MonoBehaviour
     public float JumpForce;
     private Vector3 MovePlayer;
 
+    private Vector3 Flydirection;
+
     public Camera MainCamera;
     private Vector3 CamForward;
     private Vector3 CamRight;
@@ -40,9 +42,9 @@ public class PlayerMov : MonoBehaviour
         MovePlayer = MovePlayer*PlayerSpeed;
 
         Player.transform.LookAt(Player.transform.position + MovePlayer);
-        
-        SetGravity();
+                
         PlayerActions();
+        SetGravity();
 
         Player.Move(MovePlayer*Time.deltaTime);
 
@@ -62,12 +64,28 @@ public class PlayerMov : MonoBehaviour
     
     public void PlayerActions()
     {
-        if (Player.isGrounded && Input.GetButtonDown("Jump"))
+        if (Input.GetButtonDown("Jump"))
         {
             PlayerFallSpeed=JumpForce;
             MovePlayer.y=PlayerFallSpeed;
         }
     }
+
+    public void Fly()
+    {
+        Flydirection = Vector3.up * JumpForce * Time.deltaTime;
+
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            Player.Move(Flydirection);
+        }
+
+        else if (Input.GetKeyDown(KeyCode.LeftShift))
+        {
+            Player.Move(-Flydirection);
+        }
+    }
+
     public void SetGravity()
     {
         if(Player.isGrounded)
